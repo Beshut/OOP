@@ -1,8 +1,7 @@
 using System;
-using System.Drawing;
 using System.Windows.Forms;
 
-namespace MathQuiz1
+namespace PictureViewer
 {
     public partial class Form1 : Form
     {
@@ -11,143 +10,46 @@ namespace MathQuiz1
             InitializeComponent();
         }
 
-        private void startButton_Click(object sender, EventArgs e)
+        private void showButton_Click(object sender, EventArgs e)
         {
-            StartTheQuiz();
-            startButton.Enabled = false;
-        }
-
-        Random randomizer = new Random();
-        int addend1;
-        int addend2;
-        int minuend;
-        int subtrahend;
-        int multiplicand;
-        int multiplier;
-        int dividend;
-        int divisor;
-        int timeLeft;
-
-        public void StartTheQuiz()
-        {
-            addend1 = randomizer.Next(51);
-            addend2 = randomizer.Next(51);
-            plusLeftLabel.Text = addend1.ToString();
-            plusRightLabel.Text = addend2.ToString();
-            sum.Value = 0;
-
-            minuend = randomizer.Next(1, 101);
-            subtrahend = randomizer.Next(1, minuend);
-            minusLeftLabel.Text = minuend.ToString();
-            minusRightLabel.Text = subtrahend.ToString();
-            difference.Value = 0;
-
-            multiplicand = randomizer.Next(2, 11);
-            multiplier = randomizer.Next(2, 11);
-            timesLeftLabel.Text = multiplicand.ToString();
-            timesRightLabel.Text = multiplier.ToString();
-            product.Value = 0;
-
-            divisor = randomizer.Next(2, 11);
-            int temporaryQuotient = randomizer.Next(2, 11);
-            dividend = divisor * temporaryQuotient;
-            dividedLeftLabel.Text = dividend.ToString();
-            dividedRightLabel.Text = divisor.ToString();
-            quotient.Value = 0;
-
-            timeLeft = 30;
-            timeLabel.Text = "30 seconds";
-            timer1.Start();
-        }
-
-        private bool CheckTheAnswer()
-        {
-            if ((addend1 + addend2 == sum.Value) && (minuend - subtrahend == difference.Value) && (multiplicand * multiplier == product.Value) && (dividend / divisor == quotient.Value)) return true;
-            else return false;
-        }
-
-        private void CheckTheAnswerAndDoVoice(int type = 0)
-        {
-            Boolean isCorrect = false;
-            switch (type)
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                case 0: isCorrect = (addend1 + addend2 == sum.Value); break;
-                case 1: isCorrect = (minuend - subtrahend == difference.Value); break;
-                case 2: isCorrect = (multiplicand * multiplier == product.Value); break;
-                case 3: isCorrect = (dividend / divisor == quotient.Value); break;
+                // Покажите диалоговое окно "Открыть файл". Если пользователь нажмет кнопку ОК, загрузите
+                // изображение, которое выбрал пользователь.
+                pictureBox1.Load(openFileDialog1.FileName);
             }
+        }
 
-            if (!isCorrect)
-            {
-                System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"C:\Users\User\Documents\Sound\Eror.wav");
-                player.Play();
-            }
+        private void closeButton_Click(object sender, EventArgs e)
+        {
+            // Закройте форму.
+            this.Close();
+        }
+
+        private void backgroundButton_Click(object sender, EventArgs e)
+        {
+            // Покажите диалоговое окно "Цвет". Если пользователь нажмет кнопку ОК, измените
+            // фон элемента управления PictureBox соответствует цвету, выбранному пользователем.
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+                pictureBox1.BackColor = colorDialog1.Color;
+        }
+
+        private void clearButton_Click(object sender, EventArgs e)
+        {
+            // Проясните картину.
+            pictureBox1.Image = null;
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            // Если пользователь установит флажок Растягивать,
+            // измените размер PictureBox в
+            // Свойство SizeMode для "растягивания". Если пользователь очищает
+            // установите флажок, измените его на "Обычный".
+            if (checkBox1.Checked)
+                pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             else
-            {
-                System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"C:\Users\User\Documents\Sound\Super.wav");
-                player.Play();
-            }
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            if (CheckTheAnswer())
-            {
-                timer1.Stop();
-                MessageBox.Show("You got all the answers right!", "Congratulations!");
-                startButton.Enabled = true;
-            }
-            else if (timeLeft > 0)
-            {
-                timeLeft = timeLeft - 1;
-                timeLabel.Text = timeLeft + " seconds";
-                if (timeLeft < 6)
-                {
-                    timeLabel.BackColor = Color.Red;
-                }
-            }
-            else
-            {
-                timeLabel.BackColor = Color.White;
-                timer1.Stop();
-                timeLabel.Text = "Time's up!";
-                MessageBox.Show("You didn't finish in time.", "Sorry!");
-                sum.Value = addend1 + addend2;
-                difference.Value = minuend - subtrahend;
-                product.Value = multiplicand * multiplier;
-                quotient.Value = dividend / divisor;
-                startButton.Enabled = true;
-            }
-        }
-
-        private void answer_Enter(object sender, EventArgs e)
-        {
-            NumericUpDown answerBox = sender as NumericUpDown;
-            if (answerBox != null)
-            {
-                int lengthOfAnswer = answerBox.Value.ToString().Length;
-                answerBox.Select(0, lengthOfAnswer);
-            }
-        }
-
-        private void sum_ValueChanged(object sender, EventArgs e)
-        {
-            CheckTheAnswerAndDoVoice(0);
-        }
-
-        private void difference_ValueChanged(object sender, EventArgs e)
-        {
-            CheckTheAnswerAndDoVoice(1);
-        }
-
-        private void product_ValueChanged(object sender, EventArgs e)
-        {
-            CheckTheAnswerAndDoVoice(2);
-        }
-
-        private void quotient_ValueChanged(object sender, EventArgs e)
-        {
-            CheckTheAnswerAndDoVoice(3);
+                pictureBox1.SizeMode = PictureBoxSizeMode.Normal;
         }
     }
 }
