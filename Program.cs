@@ -1,55 +1,43 @@
 using System;
 using System.Windows.Forms;
 
-namespace PictureViewer
+namespace Lab5
 {
-    public partial class Form1 : Form
+    public partial class Lab5 : Form
     {
-        public Form1()
+        public Lab5()
         {
             InitializeComponent();
         }
 
-        private void showButton_Click(object sender, EventArgs e)
+        private void btnCalc_Click(object sender, EventArgs e)
         {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            int fromX = int.Parse(txtX1.Text);
+            int toX = int.Parse(txtX2.Text);
+            int fromY = int.Parse(txtY1.Text);
+            int toY = int.Parse(txtY2.Text);
+
+            if (fromX > toX)
             {
-                // Покажите диалоговое окно "Открыть файл". Если пользователь нажмет кнопку ОК, загрузите
-                // изображение, которое выбрал пользователь.
-                pictureBox1.Load(openFileDialog1.FileName);
+                MessageBox.Show("Интервал должен быть от меньшего к большему");
+                txtX1.Text = String.Empty;
+                txtX2.Text = String.Empty;
             }
-        }
 
-        private void closeButton_Click(object sender, EventArgs e)
-        {
-            // Закройте форму.
-            this.Close();
-        }
+            if (fromY > toY)
+            {
+                MessageBox.Show("Интервал должен быть от меньшего к большему");
+                txtY1.Text = String.Empty;
+                txtY2.Text = String.Empty;
+            }
 
-        private void backgroundButton_Click(object sender, EventArgs e)
-        {
-            // Покажите диалоговое окно "Цвет". Если пользователь нажмет кнопку ОК, измените
-            // фон элемента управления PictureBox соответствует цвету, выбранному пользователем.
-            if (colorDialog1.ShowDialog() == DialogResult.OK)
-                pictureBox1.BackColor = colorDialog1.Color;
-        }
-
-        private void clearButton_Click(object sender, EventArgs e)
-        {
-            // Проясните картину.
-            pictureBox1.Image = null;
-        }
-
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            // Если пользователь установит флажок Растягивать,
-            // измените размер PictureBox в
-            // Свойство SizeMode для "растягивания". Если пользователь очищает
-            // установите флажок, измените его на "Обычный".
-            if (checkBox1.Checked)
-                pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            else
-                pictureBox1.SizeMode = PictureBoxSizeMode.Normal;
+            for (int x = fromX; x <= toX; x++)
+            {
+                for (int y = fromY ; y <= toY; y++)
+                {
+                    lstResult.Items.Add($"z(x,y) = {x} - {y} = {x - y}");
+                }
+            }
         }
     }
 }
