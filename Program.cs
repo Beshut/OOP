@@ -1,43 +1,60 @@
 using System;
 using System.Windows.Forms;
 
-namespace Lab5
+namespace Lab6_1
 {
-    public partial class Lab5 : Form
+    public partial class Lab6 : Form
     {
-        public Lab5()
+        public Lab6()
         {
             InitializeComponent();
         }
 
-        private void btnCalc_Click(object sender, EventArgs e)
+        bool kon = false;
+        private void tmr_Tick(object sender, EventArgs e)
         {
-            int fromX = int.Parse(txtX1.Text);
-            int toX = int.Parse(txtX2.Text);
-            int fromY = int.Parse(txtY1.Text);
-            int toY = int.Parse(txtY2.Text);
-
-            if (fromX > toX)
+            if ((pct.Left < 207 || pct.Left == 207) && kon == true && bthStart.Text == "Стоп" && pct.Left > 35)
             {
-                MessageBox.Show("Интервал должен быть от меньшего к большему");
-                txtX1.Text = String.Empty;
-                txtX2.Text = String.Empty;
+                pct.Left = pct.Left - 4;
             }
 
-            if (fromY > toY)
+            if (pct.Left == 35 && kon == true)
             {
-                MessageBox.Show("Интервал должен быть от меньшего к большему");
-                txtY1.Text = String.Empty;
-                txtY2.Text = String.Empty;
+                bthStart.Text = "Старт";
+                kon = false;
             }
 
-            for (int x = fromX; x <= toX; x++)
+            if (pct.Left == 207)
             {
-                for (int y = fromY ; y <= toY; y++)
-                {
-                    lstResult.Items.Add($"z(x,y) = {x} - {y} = {x - y}");
-                }
+                bthStart.Text = "Старт";
+                kon = true;
             }
+
+            if (pct.Left < 207 && kon == false && bthStart.Text == "Стоп")
+            {
+                pct.Left = pct.Left + 4;
+            }
+        }
+
+        private void bthStart_Click(object sender, EventArgs e)
+        {
+            tmr.Enabled = true;
+            tmr.Interval = 50;
+
+            if (bthStart.Text == "Старт")
+            {
+                bthStart.Text = "Стоп";
+            }
+            else
+            {
+                bthStart.Text = "Старт";
+                tmr.Stop();
+            }
+        }
+
+        private void bthExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
