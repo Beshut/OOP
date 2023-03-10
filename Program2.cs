@@ -1,50 +1,47 @@
 using System;
 using System.Windows.Forms;
 
-namespace Lab5_2
+namespace Lab6_2
 {
-    public partial class Form1 : Form
+    public partial class Lab6_2 : Form
     {
-        public Form1()
+        public Lab6_2()
         {
             InitializeComponent();
         }
 
-        private void tmrSecundomer_Tick(object sender, EventArgs e)
+        private void bthCalc_Click(object sender, EventArgs e)
         {
-            int tmp = Int32.Parse(txtSeconds.Text);
-            int tmpM = Int32.Parse(txtMinutes.Text);
-            tmp += 1;
-            if (tmp != 60)
+            int counter = 0;
+            double sum = 0;
+            double summand = 0.0;
+            double x, precision;
+            bool f = false;
+            do
             {
-                txtSeconds.Text = tmp.ToString();
+                counter++;
+                if (double.TryParse(txtPrecision.Text, out precision))
+                {
+                    f = true;
+                }
+
+                if (double.TryParse(txtX.Text, out x))
+                {
+                    summand = double.Parse(txtX.Text) / counter;
+                }
+
+                sum += summand;
+            } while (f && Math.Abs(summand) > precision);
+
+            if (f)
+            {
+                lblResult.Text = "сумма = " + sum + ", количество = " + counter;
             }
             else
             {
-                txtSeconds.Text = "0";
-                tmpM += 1;
-                txtMinutes.Text = tmpM.ToString();
+                MessageBox.Show("Введите числоыое значение!");
+                txtPrecision.Text = String.Empty;
             }
-        }
-
-        private void btnStart_Click(object sender, EventArgs e)
-        {
-            tmrSecundomer.Start();
-            if (btnStart.Text == "Старт")
-            {
-                btnStart.Text = "Стоп";
-            }
-            else
-            {
-                btnStart.Text = "Старт";
-                tmrSecundomer.Stop();
-            }
-            
-        }
-
-        private void bthRecord_Click(object sender, EventArgs e)
-        {
-            txtRecord.Text = $"{txtMinutes.Text} мин. {txtSeconds.Text} сек.";
         }
     }
 }
